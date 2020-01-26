@@ -60,8 +60,8 @@ void gameoverr(RenderWindow &app)
     over.setCharacterSize(100);
     game.setPosition(300,300);
     over.setPosition(300,450);
-    game.setColor(Color::Red);
-    over.setColor(Color::Red);
+    game.setFillColor(Color::Red);
+    over.setFillColor(Color::Red);
 
 
 
@@ -118,7 +118,7 @@ void save_score(RenderWindow &app,int sc,Sprite back)
         }
         high.setFont(pixel);
         high.setCharacterSize(50);
-        high.setPosition(200,20);
+        high.setPosition(250,20);
         high.setString(" HIGHSCORES ");
         Event event;
         app.pollEvent(event);
@@ -146,9 +146,9 @@ void save_score(RenderWindow &app,int sc,Sprite back)
             c.r=rand()%255;
             c.b=rand()%255;
             c.g=rand()%255;
-            nam[i-1].setColor(c);
-            sco[i-1].setColor(c);
-            high.setColor(c);
+            nam[i-1].setFillColor(c);
+            sco[i-1].setFillColor(c);
+            high.setFillColor(c);
             app.clear();
             app.draw(back);
             for(int k=0;k<10;k++)
@@ -173,7 +173,7 @@ void save_score(RenderWindow &app,int sc,Sprite back)
     }
 }
 
-void show_score(RenderWindow &app,Sprite back)
+void show_score(RenderWindow &app)
 {
     Event klik;
     app.pollEvent(klik);
@@ -212,9 +212,8 @@ void show_score(RenderWindow &app,Sprite back)
         c.r=rand()%255;
         c.b=rand()%255;
         c.g=rand()%255;
-        high.setColor(c);
-        app.clear();
-        app.draw(back);
+        high.setFillColor(c);
+        app.clear(Color::Black);
         for(int k=0;k<10;k++)
         {
             app.draw(sco[k]);
@@ -222,6 +221,62 @@ void show_score(RenderWindow &app,Sprite back)
         }
         app.draw(high);
         app.draw(press);
+        app.display();
+    }
+}
+
+void credits(RenderWindow &app)
+{
+    app.setFramerateLimit(10);
+    Text author,version,supervisor,categories[3],place,press,credits;
+    Font pixel;
+    pixel.loadFromFile("src/8-bit-pusab.ttf");
+    author.setFont(pixel);
+    press.setFont(pixel);
+    version.setFont(pixel);
+    supervisor.setFont(pixel);
+    place.setFont(pixel);
+    credits.setFont(pixel);
+    for(int i=0;i<3;i++)
+    {
+        categories[i].setFont(pixel);
+        categories[i].setPosition(200,250+(i*100));
+    }
+    categories[0].setString("author:");
+    categories[1].setString("supervisor:");
+    categories[2].setString("version:");
+    credits.setCharacterSize(50);
+    credits.setPosition(350,20);
+    credits.setString(" CREDITS ");
+    press.setString(" PRESS ESC TO EXIT ");
+    press.setPosition(300,850);
+    author.setString("Mateusz Reis");
+    supervisor.setString("Zuzanna Beltowska <3");
+    version.setString("Alpha 0.1");
+    author.setPosition(600,250);
+    supervisor.setPosition(600,350);
+    version.setPosition(600,450);
+    place.setString("Wroclaw - Institute of Computer Science - 2020");
+    place.setCharacterSize(20);
+    place.setPosition(200,700);
+    while(!Keyboard::isKeyPressed(Keyboard::Escape))
+    {
+        Color c;
+        c.r=rand()%255;
+        c.b=rand()%255;
+        c.g=rand()%255;
+        author.setFillColor(c);
+        supervisor.setFillColor(c);
+        version.setFillColor(c);
+        place.setFillColor(c);
+        app.clear(Color::Black);
+        app.draw(author);
+        app.draw(supervisor);
+        app.draw(version);
+        app.draw(credits);
+        app.draw(press);
+        app.draw(place);
+        for(int i=0;i<3;i++)app.draw(categories[i]);
         app.display();
     }
 }

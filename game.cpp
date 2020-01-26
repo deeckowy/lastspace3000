@@ -321,7 +321,7 @@ void main_game(RenderWindow &app,Sprite back)
 
 
         if(bonus_ms&&bonus_time<timm)
-        {app.draw(Bonus_MSG);Bonus_MSG.setColor(Color(rand()%255,rand()%255,rand()%255));}
+        {app.draw(Bonus_MSG);Bonus_MSG.setFillColor(Color(rand()%255,rand()%255,rand()%255));}
         else bonus_ms=false;
 
         //BONUS things

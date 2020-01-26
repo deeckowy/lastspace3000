@@ -76,7 +76,9 @@ int main()
                 if(i==0)
                 {levels(app,1);main_game(app,bback);i=-2;break;}
                 if(i==2)
-                {show_score(app,bback);i=-2;break;}
+                {show_score(app);i=-2;break;}
+                if(i==4)
+                {credits(app);i=-2;break;}
                 if(i==6)
                 {app.close();}
             }

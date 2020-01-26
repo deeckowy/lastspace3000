@@ -15,5 +15,6 @@ using namespace sf;
 void levels(RenderWindow &app,int level);
 void gameoverr(RenderWindow &app);
 void save_score(RenderWindow &app,int sc,Sprite back);
-void show_score(RenderWindow &app,Sprite back);
+void show_score(RenderWindow &app);
+void credits(RenderWindow &app);
 #endif
