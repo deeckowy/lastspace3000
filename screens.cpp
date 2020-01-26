@@ -186,7 +186,7 @@ void show_score(RenderWindow &app,Sprite back)
     for(int i=0;i<10;i++)getline(rank,names[i]);
     rank.close();   
     
-    Text sco[10],nam[10],high;
+    Text sco[10],nam[10],high,press;
     for(int k=0;k<10;k++)
     {
         sco[k].setFont(pixel);
@@ -198,8 +198,11 @@ void show_score(RenderWindow &app,Sprite back)
     }
     high.setFont(pixel);
     high.setCharacterSize(50);
-    high.setPosition(200,20);
+    high.setPosition(250,20);
     high.setString(" HIGHSCORES ");
+    press.setFont(pixel);
+    press.setString(" PRESS ESC TO EXIT ");
+    press.setPosition(300,850);
     Event event;
     app.pollEvent(event);
     app.setFramerateLimit(10);
@@ -218,6 +221,7 @@ void show_score(RenderWindow &app,Sprite back)
             app.draw(nam[k]);
         }
         app.draw(high);
+        app.draw(press);
         app.display();
     }
 }
