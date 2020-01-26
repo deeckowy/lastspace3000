@@ -237,6 +237,8 @@ void main_game(RenderWindow &app,Sprite back)
         float dt=clock.restart().asSeconds();
         int timm=90-time.getElapsedTime().asSeconds();
         
+        Event event;
+        while(app.pollEvent(event));
         //setting gui unconst values 
         s2=to_string(scores);
         t2=to_string(timm);
