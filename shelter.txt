@@ -1,0 +1,274 @@
+#include <iostream>
+#include <SFML/Graphics.hpp>
+#include <SFML/Window.hpp>
+#include <list>
+#include <cstdlib>
+#include "functions.hpp"
+#include <cmath>
+
+using namespace std;
+using namespace sf;
+
+#define delsth(IN)delete IN;\
+IN=NULL;\
+
+class Object
+{
+    public:
+    float pos_x=0.0,pos_y=0.0,dx=0.0,dy=0.0,R=0.0;
+    string name;
+    Sprite loook;
+    void movin(float dt)
+    {
+        if(dx>=0.0)
+        {
+            if(pos_x<1050)
+                pos_x+=dt*dx*100;
+        }
+        else 
+        {
+            if(pos_x>150)
+                pos_x+=dt*dx*100;
+        }
+        if(dy>=0.0)
+        {
+            if(pos_y<900)
+                pos_y+=dt*dy*100;
+        }
+        else 
+        {
+            if(pos_y>0)
+                pos_y+=dt*dy*100;
+        }
+        dy=dx=0.0;
+        loook.setPosition(pos_x,pos_y);
+    }
+};
+
+class Player:public Object
+{
+    public:
+    Player()
+    {   
+        name="Player";
+    }
+
+    
+};
+//bullets from enemy and player
+class Bullet:public Object
+{
+    public:
+    Bullet()
+    {
+        name="bullet";
+    }
+    void go_forward(){this->dy=-5.0;}
+    void go_down(){this->dy=5.0;}
+};
+//enemies
+class Enemy:public Object
+{
+    public:
+    int flag=1;
+    Enemy()
+    {
+        name="Enemy";
+    }
+    void goen()
+    {
+        if(this->flag==1)this->dx=1.0;
+        else this->dx=-1.0;
+        if(rand()%10000==69)this->flag=this->flag*(-1);
+    }
+};
+
+bool is_collsion(Enemy *e,Bullet *b)    
+{
+    float x=(e->pos_x+20-b->pos_x)*(e->pos_x+20-b->pos_x);
+    float y=(e->pos_y+20-b->pos_y)*(e->pos_y+20-b->pos_y);
+    float val=sqrt(x+y);
+    if(val<20)return true;
+    else return false;
+}
+
+bool is_collsionn(Player *e,Bullet *b)    
+{
+    float x=(e->pos_x+20-b->pos_x)*(e->pos_x+20-b->pos_x);
+    float y=(e->pos_y+20-b->pos_y)*(e->pos_y+20-b->pos_y);
+    float val=sqrt(x+y);
+    if(val<20.0)return true;
+    else return false;
+}
+
+
+void main_game(RenderWindow &app,Sprite back)
+{
+    //setup window for game 
+    app.setFramerateLimit(60);
+    Clock clock;
+
+
+    //player setup
+    Player *p1=new Player();
+    Texture plook;
+    plook.loadFromFile("src/ship.png");
+    p1->loook.setTexture(plook);
+    p1->loook.setOrigin(20,40);
+    p1->pos_x=600.0;
+    p1->pos_y=860.0;
+
+    //enemies setup
+    Enemy *enemies[1000]={NULL};
+    Texture ene;
+    ene.loadFromFile("src/enemy.png");
+    for(int i=0;i<1000;i++)
+    {   
+        Enemy *e=new Enemy();
+        enemies[i]=e;
+        enemies[i]->loook.setTexture(ene);
+        enemies[i]->loook.setOrigin(20,20);
+        enemies[i]->pos_x=rand_x();
+        enemies[i]->pos_y=rand_y();
+    }
+
+    //list of bullets that's shoot from player
+    Bullet *bullets[100]={NULL};
+    Texture b1;
+    b1.loadFromFile("src/bullet.png");
+
+    //list of bulltets from enemies
+    Bullet *enemy_bullets[10000]={NULL};
+    Texture eb1;
+    eb1.loadFromFile("src/enemy_bullet.png");
+
+    //main game loop
+    while(app.isOpen())
+    {
+        float dt=clock.restart().asSeconds();
+        if(Keyboard::isKeyPressed(Keyboard::Left))
+        {
+            p1->dx=-5.0;
+        }            
+        if(Keyboard::isKeyPressed(Keyboard::Right))
+        {
+            p1->dx=5.0;
+        }
+        if(Keyboard::isKeyPressed(Keyboard::Z))
+        {
+            int i=0;
+            while(bullets[i]!=NULL&&i<100)i++;
+            if(i<100)
+            {
+                Bullet *b=new Bullet();
+                b->pos_x=p1->pos_x+25.0;
+                b->pos_y=p1->pos_y;
+                b->loook.setTexture(b1);
+                bullets[i]=b;
+            }
+        }
+
+
+        //enemy shootin randomly
+        for(int i=0;i<1000;i++)
+        {
+            if(enemies[i]!=NULL&&rand()%100==0)
+            {
+                int r=0;
+                while(enemy_bullets[r]!=NULL&&r<10000)r++;
+                if(r<10000)
+                {
+                    Bullet *ebe=new Bullet();
+                    ebe->pos_x=enemies[i]->pos_x;
+                    ebe->pos_y=enemies[i]->pos_y;
+                    ebe->loook.setTexture(eb1);
+                    enemy_bullets[r]=ebe;
+                }
+            }
+        }
+
+
+        //colission checkin
+        for(int i=0;i<100;i++)
+        {
+            for(int k=0;k<1000;k++)
+            {
+                if(bullets[i]!=NULL&&enemies[k]!=NULL)
+                    if(is_collsion(enemies[k],bullets[i]))
+                    {
+                        delsth(enemies[k]);
+                        delsth(bullets[i]);
+                    }
+            }
+        }
+        //plaer collision
+        for(int i=0;i<10000;i++)
+        {
+            if(enemy_bullets[i]!=NULL)
+            {
+                if(is_collsionn(p1,enemy_bullets[i]))
+                {    
+                   cout<<"U ARE DEAD"<<endl;
+                }
+            }
+        }
+
+
+        //movin objects
+        p1->movin(dt);
+        for(int i=0;i<100;i++)
+        {
+            if(bullets[i]!=NULL)
+            {
+                if(bullets[i]->pos_y<0.0){delsth(bullets[i]);}
+                else
+                {
+                    bullets[i]->go_forward();
+                    bullets[i]->movin(dt);
+                }
+            }
+        }
+        for(int i=0;i<10000;i++)
+        {
+            if(enemy_bullets[i]!=NULL)
+            {
+                if(enemy_bullets[i]->pos_y>900.0){delsth(enemy_bullets[i]);}
+                else
+                {
+                    enemy_bullets[i]->go_down();
+                    enemy_bullets[i]->movin(dt);
+                }
+            }
+        }
+        for(int k=0;k<1000;k++)
+        {
+            if(enemies[k]!=NULL)
+            {
+                enemies[k]->goen();
+                enemies[k]->movin(dt);
+            }
+        }
+
+
+        //drawing window and sprites
+        app.clear();
+        app.draw(back);//drawin background
+        app.draw(p1->loook);//drawin player
+        for(int k=0;k<100;k++)//drawin player bullets
+        {
+            if(bullets[k]!=NULL)
+                app.draw(bullets[k]->loook);
+        }
+        for(int k=0;k<1000;k++)//drawin enemies 
+        {
+            if(enemies[k]!=NULL)
+                app.draw(enemies[k]->loook);
+        }
+        for(int i=0;i<10000;i++)//drawin enemy bullets
+        {
+            if(enemy_bullets[i]!=NULL)
+                app.draw(enemy_bullets[i]->loook);
+        }
+        app.display();//display everything
+    }
+} 
