@@ -82,6 +82,8 @@ int main()
                 if(i==6)
                 {app.close();}
             }
+            else if(eve.type==Event::Closed)
+            {app.close();}
         }
 
     

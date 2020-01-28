@@ -238,7 +238,10 @@ void main_game(RenderWindow &app,Sprite back)
         int timm=90-time.getElapsedTime().asSeconds();
         
         Event event;
-        while(app.pollEvent(event));
+        while(app.pollEvent(event))
+        {if(event.type==Event::Closed)
+        {game_over=true;app.close();exit(0);}}
+
         //setting gui unconst values 
         s2=to_string(scores);
         t2=to_string(timm);
