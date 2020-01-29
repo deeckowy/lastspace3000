@@ -38,6 +38,10 @@ void levels(RenderWindow &app,int level)
     app.draw(leves);
     app.draw(press);
     app.display();
+    Event event;
+    while(app.pollEvent(event))
+    {if(event.type==Event::Closed)
+    {app.close();exit(0);}}
 
 
     //wait for enter 
@@ -141,6 +145,9 @@ void save_score(RenderWindow &app,int sc,Sprite back)
                     if(wname.size())wname.pop_back();
                     nam[i-1].setString(wname);
                 }
+                if(event.type==Event::Closed)
+                {app.close();exit(0);}
+
             }
             Color c;
             c.r=rand()%255;
@@ -208,6 +215,10 @@ void show_score(RenderWindow &app)
     app.setFramerateLimit(10);
     while(!Keyboard::isKeyPressed(Keyboard::Escape))
     {
+        Event event;
+        while(app.pollEvent(event))
+        {if(event.type==Event::Closed)
+        {app.close();exit(0);}}
         Color c;
         c.r=rand()%255;
         c.b=rand()%255;
@@ -261,6 +272,10 @@ void credits(RenderWindow &app)
     place.setPosition(200,700);
     while(!Keyboard::isKeyPressed(Keyboard::Escape))
     {
+        Event event;
+        while(app.pollEvent(event))
+        {if(event.type==Event::Closed)
+        {app.close();exit(0);}}
         Color c;
         c.r=rand()%255;
         c.b=rand()%255;

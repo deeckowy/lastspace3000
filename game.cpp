@@ -359,14 +359,14 @@ void main_game(RenderWindow &app,Sprite back)
                     bonus_ms=true;
                     bonus_time=timm-2;
                 }
-                else if(z<60)
+                else if(z<70)
                 {
                     scores+=rand()%100*100;
                     Bonus_MSG.setString(" EXTRA POINTS ");
                     bonus_ms=true;
                     bonus_time=timm-2;
                 }
-                else if(z<70)
+                else if(z<75)
                 {
                     p->lives++;
                     Bonus_MSG.setString(" EXTRA LIFE ");
@@ -375,7 +375,7 @@ void main_game(RenderWindow &app,Sprite back)
                 }
                 else if(z<80)
                 {
-                    curr_wp=types[rand()%5];
+                    curr_wp=types[rand()%4+1];
                     Bonus_MSG.setString(" WEAPON ");
                     bonus_ms=true;
                     bonus_time=timm-2;
@@ -422,8 +422,9 @@ void main_game(RenderWindow &app,Sprite back)
                         dell(ebullets[i]);
                         shield=true;
                         shield_start=timm-3;
-                        p->x=770;
+                        p->x=700;
                         p->y=870;
+                        curr_wp=types[0];
                     }
             }
         }
@@ -559,6 +560,7 @@ void main_game(RenderWindow &app,Sprite back)
                 Boss->val=1000000;
                 enemies[0]=Boss;
                 bos=true;
+                max_ebullets=20;
             }
         }   
 
@@ -577,5 +579,9 @@ void main_game(RenderWindow &app,Sprite back)
         delete pbullets[i];
         delete ebullets[i];
     }
+    delete sh;
+    delete p;
+    delete Bonus;
+    for(int i=0;i<5;i++)delete types[i];
     save_score(app,scores,back);
 }
